@@ -4,119 +4,100 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NicoGPT</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
     body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #6a11cb, #2575fc);
-      color: white;
+      font-family: 'Roboto', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      text-align: center;
+      background: linear-gradient(135deg, #f06, #ff6);
+      color: #fff;
       overflow: hidden;
+      text-align: center;
     }
-
     .container {
-      background: rgba(255, 255, 255, 0.1);
+      background-color: rgba(0, 0, 0, 0.6);
       padding: 30px;
       border-radius: 15px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
       width: 100%;
-      max-width: 600px;
+      max-width: 500px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
-
     h1 {
-      font-size: 2.5rem;
+      font-size: 3rem;
       margin-bottom: 20px;
+      letter-spacing: 2px;
+      color: #fff;
     }
-
-    input, button {
-      width: 100%;
+    input {
+      width: 80%;
       padding: 15px;
       margin: 10px 0;
-      border-radius: 10px;
-      border: none;
       font-size: 1.2rem;
-      outline: none;
+      border-radius: 10px;
+      border: 2px solid #fff;
+      background-color: #333;
+      color: #fff;
     }
-
-    input {
-      background: #fff;
-      color: #333;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
     button {
-      background: #2575fc;
-      color: white;
+      width: 80%;
+      padding: 15px;
+      margin: 10px 0;
+      font-size: 1.2rem;
+      background-color: #ff6;
+      border: none;
+      border-radius: 10px;
+      color: #333;
       cursor: pointer;
-      transition: background-color 0.3s ease-in-out;
+      transition: 0.3s ease;
     }
-
     button:hover {
-      background: #6a11cb;
+      background-color: #f06;
     }
-
     #response {
       margin-top: 20px;
-      padding: 15px;
-      background-color: #333;
+      padding: 20px;
+      background-color: #fff;
       border-radius: 10px;
-      display: none;
-      font-size: 1.1rem;
-      color: #fff;
-      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    .loading {
-      color: #fff;
+      color: #333;
       font-size: 1.2rem;
-      font-weight: 500;
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      visibility: hidden;
     }
-
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 2rem;
-      }
-
-      input, button {
-        font-size: 1rem;
-      }
+    .loading {
+      color: #ff6;
+      font-size: 1.5rem;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Bienvenido a NicoGPT</h1>
-    <input type="text" id="userInput" placeholder="Escribe algo..." autocomplete="off">
-    <button onclick="getResponse()">Enviar</button>
-    
-    <div id="response"></div>
-  </div>
 
-  <script>
-    async function getResponse() {
-      const userInput = document.getElementById("userInput").value;
-      if (!userInput) return;
+<div class="container">
+  <h1>NicoGPT</h1>
+  <p style="font-size: 1.2rem; color: #ddd;">¡Escribe algo y deja que NicoGPT te responda! 🌟</p>
+  <input type="text" id="userInput" placeholder="Escribe algo..." autocomplete="off" />
+  <button onclick="getResponse()">Enviar</button>
+  <div id="response"></div>
+</div>
 
-      const responseElement = document.getElementById("response");
-      responseElement.style.display = "none"; // Ocultar la respuesta anterior
+<script>
+  async function getResponse() {
+    const userInput = document.getElementById("userInput").value;
+    const responseElement = document.getElementById("response");
 
-      responseElement.innerHTML = '<div class="loading">Cargando...</div>';
+    if (!userInput) return;
 
-      // Enviar la solicitud al backend (servidor)
-      const res = await fetch('/get-response', {
+    responseElement.innerHTML = '<div class="loading">Cargando...</div>';
+    responseElement.style.visibility = 'visible';
+
+    try {
+      const res = await fetch('/api/generateResponse', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -125,9 +106,16 @@
       });
 
       const data = await res.json();
-      responseElement.innerHTML = data.response;
-      responseElement.style.display = "block"; // Mostrar la respuesta
+      if (data.error) {
+        responseElement.innerHTML = 'Error: ' + data.error;
+      } else {
+        responseElement.innerHTML = data.response;
+      }
+    } catch (error) {
+      responseElement.innerHTML = 'Hubo un error al procesar la solicitud.';
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>
