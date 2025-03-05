@@ -1,7 +1,7 @@
 const axios = require('axios');
 
-const API_TOKEN = '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'; // Tu token de Hugging Face
-const MODEL_NAME = 'deepseek-ai/Janus-Pro-7B'; // El modelo que estás usando
+const API_TOKEN = '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'; // Tu token real de Hugging Face
+const MODEL_NAME = 'deepseek-ai/Janus-Pro-7B'; // El modelo que estás utilizando
 
 module.exports = async (req, res) => {
   if (req.method === 'POST') {
@@ -22,7 +22,6 @@ module.exports = async (req, res) => {
         }
       );
 
-      // Asegúrate de que el modelo devuelva texto
       if (response.data && response.data[0] && response.data[0].generated_text) {
         return res.status(200).json({ response: response.data[0].generated_text });
       } else {
@@ -36,4 +35,3 @@ module.exports = async (req, res) => {
     res.status(405).json({ error: 'Método no permitido. Usa POST.' });
   }
 };
-
