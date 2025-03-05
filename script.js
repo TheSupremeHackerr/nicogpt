@@ -1,108 +1,42 @@
-/* Fuentes globales */
-body {
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(135deg, #f06, #f79);
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+const chatBox = document.getElementById("chat");
+const userInput = document.getElementById("userInput");
+
+const HF_TOKEN = "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"; // Tu token de Hugging Face
+
+function sendMessage() {
+    const message = userInput.value.trim();
+    if (message) {
+        appendMessage(message, 'user'); // Mostrar mensaje del usuario
+        userInput.value = ''; // Limpiar el campo de texto
+        getAIResponse(message); // Enviar mensaje a la IA
+    }
 }
 
-/* Contenedor principal */
-.container {
-    background: #fff;
-    border-radius: 12px;
-    padding: 30px;
-    width: 100%;
-    max-width: 450px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    text-align: center;
+function appendMessage(message, sender) {
+    const messageDiv = document.createElement("div");
+    messageDiv.textContent = message;
+    messageDiv.classList.add(sender);
+    chatBox.appendChild(messageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight; // Desplazar la vista hacia el mensaje más reciente
 }
 
-/* Título */
-h1 {
-    font-family: 'Poppins', sans-serif;
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 36px;
-    letter-spacing: 1px;
-}
+async function getAIResponse(userMessage) {
+    appendMessage('NicoGPT: Estoy pensando...', 'ai');
 
-/* Caja de chat */
-.chat-box {
-    background-color: #f7f7f7;
-    border-radius: 10px;
-    padding: 20px;
-    height: 400px;
-    overflow-y: auto;
-    margin-bottom: 20px;
-    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+    // Enviar solicitud a la API de Hugging Face
+    const response = await fetch('https://api-inference.huggingface.co/models/gpt2', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${HF_TOKEN}`
+        },
+        body: JSON.stringify({
+            inputs: userMessage
+        })
+    });
 
-#chat {
-    max-height: 350px;
-    overflow-y: auto;
-    margin-bottom: 10px;
-}
+    const data = await response.json();
+    const aiMessage = data[0]?.generated_text || "Lo siento, algo salió mal.";
 
-/* Caja de input */
-.input-box {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* Estilo del input */
-input[type="text"] {
-    width: 80%;
-    padding: 12px 15px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
-    color: #555;
-    background-color: #fff;
-    transition: border 0.3s ease;
-}
-
-input[type="text"]:focus {
-    border-color: #4CAF50;
-    outline: none;
-}
-
-/* Estilo del botón */
-button {
-    background-color: #4CAF50;
-    color: #fff;
-    border: none;
-    padding: 12px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-size: 16px;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-/* Mensajes del chat */
-#chat div {
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: #e1f5e1;
-    word-wrap: break-word;
-}
-
-#chat .user {
-    background-color: #d4e1ff;
-    text-align: left;
-}
-
-#chat .ai {
-    background-color: #d3ffd4;
-    text-align: right;
+    appendMessage(aiMessage, 'ai'); // Mostrar mensaje de la IA
 }
