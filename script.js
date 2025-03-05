@@ -41,9 +41,6 @@ async function getAIResponse(userMessage) {
         if (data && data[0]) {
             let aiMessage = data[0].generated_text || "Lo siento, algo salió mal.";
 
-            // Asegurarnos de que la respuesta está en el formato esperado, comenzando con "AI: "
-            aiMessage = aiMessage.replace(/^.*AI:/, "AI:").trim();
-
             // Limitar la longitud de la respuesta
             aiMessage = aiMessage.length > 200 ? aiMessage.substring(0, 200) + "..." : aiMessage;
 
@@ -62,3 +59,4 @@ function updateAIMessage(message) {
         lastMessage.textContent = message; // Reemplazar "Estoy pensando..." por el mensaje de la IA
     }
 }
+
