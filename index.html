@@ -106,12 +106,17 @@
       });
 
       const data = await res.json();
-      if (data.error) {
-        responseElement.innerHTML = 'Error: ' + data.error;
-      } else {
+      if (!res.ok) {
+        throw new Error(data.error || 'Error inesperado');
+      }
+
+      if (data.response) {
         responseElement.innerHTML = data.response;
+      } else {
+        responseElement.innerHTML = 'No se recibió respuesta del modelo.';
       }
     } catch (error) {
+      console.error('Error en la solicitud:', error);
       responseElement.innerHTML = 'Hubo un error al procesar la solicitud.';
     }
   }
@@ -119,3 +124,4 @@
 
 </body>
 </html>
+
