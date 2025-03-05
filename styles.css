@@ -3,7 +3,7 @@ body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #f06, #f79);
+    background: linear-gradient(135deg, #00bcd4, #4caf50); /* Fondo con gradiente */
     color: #fff;
     display: flex;
     justify-content: center;
@@ -17,7 +17,7 @@ body {
     border-radius: 12px;
     padding: 30px;
     width: 100%;
-    max-width: 450px;
+    max-width: 500px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
@@ -98,11 +98,11 @@ button:hover {
 }
 
 #chat .user {
-    background-color: #d4e1ff;
+    background-color: #e1f5fe;
     text-align: left;
 }
 
 #chat .ai {
-    background-color: #d3ffd4;
+    background-color: #e8f5e9;
     text-align: right;
 }
