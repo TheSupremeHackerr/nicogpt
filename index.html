@@ -1,127 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NicoGPT</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Roboto', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: linear-gradient(135deg, #f06, #ff6);
-      color: #fff;
-      overflow: hidden;
-      text-align: center;
-    }
-    .container {
-      background-color: rgba(0, 0, 0, 0.6);
-      padding: 30px;
-      border-radius: 15px;
-      width: 100%;
-      max-width: 500px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    }
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 20px;
-      letter-spacing: 2px;
-      color: #fff;
-    }
-    input {
-      width: 80%;
-      padding: 15px;
-      margin: 10px 0;
-      font-size: 1.2rem;
-      border-radius: 10px;
-      border: 2px solid #fff;
-      background-color: #333;
-      color: #fff;
-    }
-    button {
-      width: 80%;
-      padding: 15px;
-      margin: 10px 0;
-      font-size: 1.2rem;
-      background-color: #ff6;
-      border: none;
-      border-radius: 10px;
-      color: #333;
-      cursor: pointer;
-      transition: 0.3s ease;
-    }
-    button:hover {
-      background-color: #f06;
-    }
-    #response {
-      margin-top: 20px;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 10px;
-      color: #333;
-      font-size: 1.2rem;
-      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-      visibility: hidden;
-    }
-    .loading {
-      color: #ff6;
-      font-size: 1.5rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NicoGPT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<div class="container">
-  <h1>NicoGPT</h1>
-  <p style="font-size: 1.2rem; color: #ddd;">¡Escribe algo y deja que NicoGPT te responda! 🌟</p>
-  <input type="text" id="userInput" placeholder="Escribe algo..." autocomplete="off" />
-  <button onclick="getResponse()">Enviar</button>
-  <div id="response"></div>
-</div>
-
-<script>
-  async function getResponse() {
-    const userInput = document.getElementById("userInput").value;
-    const responseElement = document.getElementById("response");
-
-    if (!userInput) return;
-
-    responseElement.innerHTML = '<div class="loading">Cargando...</div>';
-    responseElement.style.visibility = 'visible';
-
-    try {
-      const res = await fetch('/api/generateResponse', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ input: userInput }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || 'Error inesperado');
-      }
-
-      if (data.response) {
-        responseElement.innerHTML = data.response;
-      } else {
-        responseElement.innerHTML = 'No se recibió respuesta del modelo.';
-      }
-    } catch (error) {
-      console.error('Error en la solicitud:', error);
-      responseElement.innerHTML = 'Hubo un error al procesar la solicitud.';
-    }
-  }
-</script>
-
+    <div class="container">
+        <h1>Bienvenido a NicoGPT</h1>
+        <div class="chat-box">
+            <div id="chat"></div>
+            <div class="input-box">
+                <input type="text" id="userInput" placeholder="Escribe tu mensaje..." />
+                <button onclick="sendMessage()">Enviar</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
-
