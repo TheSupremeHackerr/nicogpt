@@ -3,6 +3,8 @@ const userInput = document.getElementById("userInput");
 
 const HF_TOKEN = "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"; // Tu token de Hugging Face
 
+let previousMessages = []; // Para mantener el contexto de la conversación
+
 function sendMessage() {
     const message = userInput.value.trim();
     if (message) {
@@ -23,6 +25,12 @@ function appendMessage(message, sender) {
 async function getAIResponse(userMessage) {
     appendMessage('NicoGPT: Estoy pensando...', 'ai'); // Indicar que la IA está procesando
 
+    // Mantener el historial de la conversación para que el modelo tenga contexto
+    previousMessages.push(`Usuario: ${userMessage}`);
+
+    // Concatenar los mensajes anteriores para enviar un contexto más completo
+    const context = previousMessages.join("\n");
+
     // Enviar solicitud a la API de Hugging Face usando DialoGPT
     try {
         const response = await fetch('https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium', {
@@ -32,7 +40,7 @@ async function getAIResponse(userMessage) {
                 'Authorization': `Bearer ${HF_TOKEN}`
             },
             body: JSON.stringify({
-                inputs: userMessage // Enviamos solo el mensaje del usuario, sin "Human:"
+                inputs: context // Enviamos todo el historial para dar contexto
             })
         });
 
@@ -43,6 +51,13 @@ async function getAIResponse(userMessage) {
 
             // Limitar la longitud de la respuesta
             aiMessage = aiMessage.length > 200 ? aiMessage.substring(0, 200) + "..." : aiMessage;
+
+            // Evitar respuestas repetidas
+            if (previousMessages[previousMessages.length - 1] === aiMessage) {
+                aiMessage = "Lo siento, parece que estoy repitiendo. ¿Cómo puedo ayudarte de otra manera?";
+            }
+
+            previousMessages.push(`IA: ${aiMessage}`); // Añadir la respuesta de la IA al contexto
 
             updateAIMessage(aiMessage); // Mostrar la respuesta de la IA
         } else {
@@ -59,3 +74,4 @@ function updateAIMessage(message) {
         lastMessage.textContent = message; // Reemplazar "Estoy pensando..." por el mensaje de la IA
     }
 }
+
