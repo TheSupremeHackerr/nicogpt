@@ -1,49 +1,39 @@
-const express = require('express');
 const axios = require('axios');
-const path = require('path');
-const app = express();
-const port = 3000;
 
-// Middleware para parsear datos JSON
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'))); // Asegúrate de que los archivos HTML, CSS y JS estén en la carpeta public
+const API_TOKEN = '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'; // Tu token de Hugging Face
+const MODEL_NAME = 'deepseek-ai/Janus-Pro-7B'; // El modelo que estás usando
 
-// Tu token de la API de Hugging Face
-const API_TOKEN = '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'; // Usa tu token real aquí
-const MODEL_NAME = 'deepseek-ai/Janus-Pro-7B'; // Usa el nombre del modelo correcto aquí
+module.exports = async (req, res) => {
+  if (req.method === 'POST') {
+    const { input } = req.body;
 
-// Ruta para obtener la respuesta del modelo
-app.post('/get-response', async (req, res) => {
-  const userInput = req.body.input;
-  
-  if (!userInput) {
-    return res.status(400).json({ error: 'No se recibió entrada del usuario.' });
-  }
-
-  try {
-    const response = await axios.post(
-      `https://api-inference.huggingface.co/models/${MODEL_NAME}`,
-      { inputs: userInput },
-      {
-        headers: {
-          Authorization: `Bearer ${API_TOKEN}`,
-        },
-      }
-    );
-
-    // Responder al frontend con el texto generado
-    if (response.data && response.data[0] && response.data[0].generated_text) {
-      res.json({ response: response.data[0].generated_text });
-    } else {
-      res.status(500).json({ error: 'No se generó texto.' });
+    if (!input) {
+      return res.status(400).json({ error: 'No se recibió entrada del usuario.' });
     }
-  } catch (error) {
-    console.error('Error al procesar la solicitud', error);
-    res.status(500).json({ error: 'Error al procesar la solicitud' });
-  }
-});
 
-// Iniciar el servidor
-app.listen(port, () => {
-  console.log(`Servidor en http://localhost:${port}`);
-});
+    try {
+      const response = await axios.post(
+        `https://api-inference.huggingface.co/models/${MODEL_NAME}`,
+        { inputs: input },
+        {
+          headers: {
+            Authorization: `Bearer ${API_TOKEN}`,
+          },
+        }
+      );
+
+      // Asegúrate de que el modelo devuelva texto
+      if (response.data && response.data[0] && response.data[0].generated_text) {
+        return res.status(200).json({ response: response.data[0].generated_text });
+      } else {
+        return res.status(500).json({ error: 'Error al generar texto.' });
+      }
+    } catch (error) {
+      console.error('Error al procesar la solicitud', error);
+      return res.status(500).json({ error: 'Hubo un error al comunicarse con la API de Hugging Face.' });
+    }
+  } else {
+    res.status(405).json({ error: 'Método no permitido. Usa POST.' });
+  }
+};
+
