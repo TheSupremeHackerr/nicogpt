@@ -6,7 +6,7 @@ const HF_TOKEN = "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"; // Tu token de Hugging
 function sendMessage() {
     const message = userInput.value.trim();
     if (message) {
-        appendMessage(message, 'user'); // Mostrar mensaje del usuario
+        appendMessage(`Human: ${message}`, 'user'); // Mostrar mensaje del usuario
         userInput.value = ''; // Limpiar el campo de texto
         getAIResponse(message); // Enviar mensaje a la IA
     }
@@ -32,7 +32,7 @@ async function getAIResponse(userMessage) {
                 'Authorization': `Bearer ${HF_TOKEN}`
             },
             body: JSON.stringify({
-                inputs: `Human: ${userMessage}\nAI:` // Asegurar que el formato sea claro
+                inputs: `Human: ${userMessage}\nAI:` // Formato claro para que la IA sepa que está respondiendo
             })
         });
 
@@ -40,6 +40,9 @@ async function getAIResponse(userMessage) {
 
         if (data && data[0]) {
             let aiMessage = data[0].generated_text || "Lo siento, algo salió mal.";
+
+            // Asegurarnos de que la respuesta está en el formato esperado, comenzando con "AI: "
+            aiMessage = aiMessage.replace(/^.*AI:/, "AI:").trim();
 
             // Limitar la longitud de la respuesta
             aiMessage = aiMessage.length > 200 ? aiMessage.substring(0, 200) + "..." : aiMessage;
