@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NicoGPT</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 600px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: none;
+      font-size: 1.2rem;
+      outline: none;
+    }
+
+    input {
+      background: #fff;
+      color: #333;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    button {
+      background: #2575fc;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    button:hover {
+      background: #6a11cb;
+    }
+
+    #response {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #333;
+      border-radius: 10px;
+      display: none;
+      font-size: 1.1rem;
+      color: #fff;
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .loading {
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      input, button {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bienvenido a NicoGPT</h1>
+    <input type="text" id="userInput" placeholder="Escribe algo..." autocomplete="off">
+    <button onclick="getResponse()">Enviar</button>
+    
+    <div id="response"></div>
+  </div>
+
+  <script>
+    async function getResponse() {
+      const userInput = document.getElementById("userInput").value;
+      if (!userInput) return;
+
+      const responseElement = document.getElementById("response");
+      responseElement.style.display = "none"; // Ocultar la respuesta anterior
+
+      responseElement.innerHTML = '<div class="loading">Cargando...</div>';
+
+      // Enviar la solicitud al backend (servidor)
+      const res = await fetch('/get-response', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ input: userInput }),
+      });
+
+      const data = await res.json();
+      responseElement.innerHTML = data.response;
+      responseElement.style.display = "block"; // Mostrar la respuesta
+    }
+  </script>
+</body>
+</html>
