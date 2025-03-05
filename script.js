@@ -6,7 +6,7 @@ const HF_TOKEN = "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"; // Tu token de Hugging
 function sendMessage() {
     const message = userInput.value.trim();
     if (message) {
-        appendMessage(`Human: ${message}`, 'user'); // Mostrar mensaje del usuario
+        appendMessage(`Usuario: ${message}`, 'user'); // Mostrar mensaje del usuario
         userInput.value = ''; // Limpiar el campo de texto
         getAIResponse(message); // Enviar mensaje a la IA
     }
@@ -21,7 +21,7 @@ function appendMessage(message, sender) {
 }
 
 async function getAIResponse(userMessage) {
-    appendMessage('NicoGPT: Estoy pensando...', 'ai');
+    appendMessage('NicoGPT: Estoy pensando...', 'ai'); // Indicar que la IA está procesando
 
     // Enviar solicitud a la API de Hugging Face usando DialoGPT
     try {
@@ -32,7 +32,7 @@ async function getAIResponse(userMessage) {
                 'Authorization': `Bearer ${HF_TOKEN}`
             },
             body: JSON.stringify({
-                inputs: `Human: ${userMessage}\nAI:` // Formato claro para que la IA sepa que está respondiendo
+                inputs: userMessage // Enviamos solo el mensaje del usuario
             })
         });
 
@@ -59,4 +59,3 @@ function updateAIMessage(message) {
         lastMessage.textContent = message; // Reemplazar "Estoy pensando..." por el mensaje de la IA
     }
 }
-
