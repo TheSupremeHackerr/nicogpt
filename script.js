@@ -32,7 +32,7 @@ async function getAIResponse(userMessage) {
                 'Authorization': `Bearer ${HF_TOKEN}`
             },
             body: JSON.stringify({
-                inputs: userMessage
+                inputs: `Human: ${userMessage}\nAI:` // Asegurar que el formato sea claro
             })
         });
 
