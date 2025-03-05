@@ -1,0 +1,108 @@
+/* Fuentes globales */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #f06, #f79);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Contenedor principal */
+.container {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Título */
+h1 {
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 36px;
+    letter-spacing: 1px;
+}
+
+/* Caja de chat */
+.chat-box {
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    padding: 20px;
+    height: 400px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#chat {
+    max-height: 350px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+/* Caja de input */
+.input-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Estilo del input */
+input[type="text"] {
+    width: 80%;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #555;
+    background-color: #fff;
+    transition: border 0.3s ease;
+}
+
+input[type="text"]:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* Estilo del botón */
+button {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Mensajes del chat */
+#chat div {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #e1f5e1;
+    word-wrap: break-word;
+}
+
+#chat .user {
+    background-color: #d4e1ff;
+    text-align: left;
+}
+
+#chat .ai {
+    background-color: #d3ffd4;
+    text-align: right;
+}
